@@ -1,113 +1,94 @@
-# OpenCart 4.1.0.1 Auto Installer
+# 🛒 OpenCart Auto Installer (v4.1.0.1)
 
-This repository provides an automated script to install OpenCart 4.1.0.1 on a VPS with a LAMP stack (Linux, Apache, MySQL, PHP).
+Skrip Bash otomatis untuk menginstal **OpenCart versi 4.1.0.1** di server Ubuntu 22.04+ dengan stack **LAMP (Linux, Apache, MySQL, PHP)** lengkap, termasuk konfigurasi permission, database, Apache rewrite, dan firewall (UFW).
 
-## Features
-- Automated installation of LAMP stack.
-- Automatic database and user setup (will replace if already exists).
-- Fully sets up OpenCart files and permissions.
-- Prepares system for web-based OpenCart installation wizard.
+---
 
-## Prerequisites
-- A fresh VPS running Ubuntu/Debian.
-- Root or sudo access.
+## 🚀 Fitur
 
-## Usage
-1. Run the installation script:
-   ```sh
-   wget -qO- https://raw.githubusercontent.com/syvaira/opencart-4.1.0.1/main/auto-install.sh | sudo bash
-   ```
+- Install semua dependensi yang dibutuhkan
+- Konfigurasi MySQL otomatis (DB, user, privileges)
+- Download & ekstrak OpenCart dari GitHub resmi
+- Setup direktori, permission, dan config file
+- Enable `mod_rewrite` dan konfigurasi `.htaccess`
+- Buka port firewall HTTP/HTTPS otomatis (UFW)
+- Cleanup otomatis setelah instalasi
+- Siap lanjut instalasi via browser dalam sekali jalan
 
-2. During installation, follow the prompts for **MySQL Secure Installation**:
+---
 
-   * You can skip password setting if using `auth_socket`.
-   * Recommended to remove anonymous users, disallow remote root login, and remove test database.
+## 🧰 Requirements
 
-## Post Installation
+- Ubuntu 22.04 atau lebih baru
+- Akses root atau `sudo`
+- Server dengan akses internet aktif
 
-After running the script:
+---
 
-1. Move OpenCart files from `upload/` to root:
+## 📥 Cara Pakai
 
-   ```bash
-   sudo mv /var/www/html/opencart/upload/* /var/www/html/opencart/
-   sudo rm -r /var/www/html/opencart/upload
-   ```
+```bash
+wget -qO- https://raw.githubusercontent.com/syvaira/opencart-4.1.0.1/main/auto-install.sh | sudo bash
+````
 
-2. Copy configuration files:
+Skrip akan:
 
-   ```bash
-   sudo cp /var/www/html/opencart/config-dist.php /var/www/html/opencart/config.php
-   sudo cp /var/www/html/opencart/admin/config-dist.php /var/www/html/opencart/admin/config.php
-   ```
+* Menghapus instalasi OpenCart sebelumnya (jika ada)
+* Menyiapkan database `opencart` dan user `opencart_user`
+* Men-deploy file OpenCart ke `/var/www/html/opencart`
 
-3. Set file permissions:
+---
 
-   ```bash
-   sudo chown -R www-data:www-data /var/www/html/opencart
-   sudo chmod -R 755 /var/www/html/opencart
-   ```
+## ⚙️ Konfigurasi Default
 
-4. (Optional) Setup Apache virtual host:
+> Kamu bisa mengedit di bagian atas skrip (`auto-install.sh`) jika ingin menyesuaikan:
 
-   ```bash
-   sudo nano /etc/apache2/sites-available/opencart.conf
-   ```
+```bash
+OPENCART_VERSION="4.1.0.1"
+INSTALL_DIR="/var/www/html/opencart"
+DB_NAME="opencart"
+DB_USER="opencart_user"
+DB_PASS="GantiPasswordKuat123"
+```
 
-   Add the following:
+---
 
-   ```apache
-   <VirtualHost *:80>
-       ServerAdmin webmaster@localhost
-       DocumentRoot /var/www/html/opencart
-       ServerName opencart.local
+## 🌐 Akses Setelah Instalasi
 
-       <Directory /var/www/html/opencart/>
-           Options Indexes FollowSymLinks
-           AllowOverride All
-           Require all granted
-       </Directory>
+Jika sukses, akan muncul:
 
-       ErrorLog ${APACHE_LOG_DIR}/opencart_error.log
-       CustomLog ${APACHE_LOG_DIR}/opencart_access.log combined
-   </VirtualHost>
-   ```
+```bash
+✅ OpenCart 4.1.0.1 berhasil diinstal!
+🌐 Akses via: http://<IP_SERVER>/opencart
+🚀 Lanjutkan instalasi via browser.
+```
 
-   Then enable and reload:
+> Ganti `<IP_SERVER>` dengan alamat IP publik atau domain server kamu.
 
-   ```bash
-   sudo a2ensite opencart.conf
-   sudo a2enmod rewrite
-   sudo systemctl reload apache2
-   ```
+---
 
-   Add to `/etc/hosts`:
+## 🔒 Langkah Setelah Instalasi Web
 
-   ```bash
-   echo "127.0.0.1 opencart.local" | sudo tee -a /etc/hosts
-   ```
-
-5. Access your OpenCart installation:
-
-   * Via browser: `http://your-server-ip/opencart/` or `http://opencart.local/`
-   * Follow the OpenCart web installer steps.
-
-6. After successful installation, remove the `install/` directory:
+1. Akses `http://<IP>/opencart`
+2. Ikuti wizard instalasi melalui browser (License → Pre-install Check → Configuration)
+3. Setelah selesai:
 
    ```bash
    sudo rm -rf /var/www/html/opencart/install
+   sudo chmod 644 /var/www/html/opencart/config.php
+   sudo chmod 644 /var/www/html/opencart/admin/config.php
    ```
 
-7. Login to the admin dashboard:
+---
 
-   * `http://your-server-ip/opencart/admin/` or `http://opencart.local/admin/`
+## 📂 Lokasi Penting
 
-## Notes
+* **Frontend**: `http://<IP>/opencart`
+* **Admin Panel**: `http://<IP>/opencart/admin`
 
-* Default MySQL credentials created by the script:
+---
 
-  * **Database:** `opencart`
-  * **Username:** `opencart_user`
-  * **Password:** `StrongPasswordHere`
-* For security, change the database password in the script before use.
-* Adjust Apache configs if using a custom domain.
+## 👨‍💻 Credit
+
+Dibuat oleh: [Syvaira](https://github.com/syvaira)
+Untuk: Infrastruktur cepat & efisien deploy OpenCart.
