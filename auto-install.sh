@@ -1,6 +1,5 @@
 #!/bin/bash
-
-set -e  # Exit on error
+set -e
 
 OPENCART_VERSION="4.1.0.1"
 DB_NAME="opencart"
@@ -16,9 +15,6 @@ sudo systemctl enable apache2
 sudo systemctl enable mysql
 sudo systemctl start apache2
 sudo systemctl start mysql
-
-echo "🔒 Running MySQL secure installation (manual step)..."
-sudo mysql_secure_installation
 
 echo "🛠 Creating MySQL database and user..."
 sudo mysql -e "DROP DATABASE IF EXISTS ${DB_NAME};"
@@ -42,7 +38,7 @@ fi
 
 echo "📁 Moving files from upload to /var/www/html/opencart root..."
 sudo mv /var/www/html/opencart/upload/* /var/www/html/opencart/
-sudo mv /var/www/html/opencart/upload/.* /var/www/html/opencart/ 2>/dev/null || true  # pindahkan file tersembunyi kalau ada
+sudo mv /var/www/html/opencart/upload/.* /var/www/html/opencart/ 2>/dev/null || true
 sudo rm -rf /var/www/html/opencart/upload
 
 echo "📝 Copying config files..."
