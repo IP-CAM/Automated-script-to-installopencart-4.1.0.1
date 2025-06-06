@@ -12,22 +12,11 @@ This repository provides an automated script to install OpenCart 4.1.0.1 on a VP
 - Root or sudo access.
 
 ## Usage
-1. Clone this repository to your VPS:
-   ```bash
-   git clone https://github.com/syvaira/opencart-4.1.0.1
+1. Run the installation script:
+   ```sh
+   wget -qO- https://raw.githubusercontent.com/syvaira/opencart-4.1.0.1/main/auto-install.sh | sudo bash
    ```
-
-2. Make the installation script executable:
-   ```bash
-   chmod +x auto-install.sh
-   ```
-
-3. Run the installation script:
-   ```bash
-   sudo ./auto-install.sh
-   ```
-
-4. Follow the prompts for MySQL secure installation.
+2. Follow the prompts for MySQL secure installation.
 
 ## Post Installation
 - Access your OpenCart installation via your server's IP address.
